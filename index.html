@@ -16,6 +16,7 @@ body {
   animation: bgShift 25s ease infinite;
 }
 
+/* Gradient shift animation */
 @keyframes bgShift {
   0% {background-position:0% 50%;}
   50% {background-position:100% 50%;}
@@ -24,18 +25,19 @@ body {
 
 /* 🌟 CARD STYLING */
 .card {
-  background: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(15px);
   border-radius: 25px;
   padding: 35px;
   max-width: 500px;
-  margin: 60px 20px;
+  margin: 60px auto;
   text-align: center;
   box-shadow: 0 8px 25px rgba(255, 182, 193, 0.4);
-  border: 2px solid rgba(255,182,193,0.6);
+  border: 1px solid rgba(255,182,193,0.5);
   position: relative;
   z-index: 5;
   animation: pop 1s ease;
+  color: #3d1c2f; /* softer text for readability */
 }
 @keyframes pop {from {transform: scale(0.7); opacity:0;} to {transform: scale(1); opacity:1;}}
 
@@ -65,13 +67,13 @@ button {
 .promise {
   text-align: left;
   font-size: 0.95em;
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.4);
   padding: 12px 18px;
   border-radius: 15px;
   list-style: none;
   box-shadow: 0 4px 12px rgba(255,182,193,0.3);
   margin-top: 15px;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  color: #3d1c2f;
 }
 
 /* YES MESSAGE */
@@ -79,7 +81,8 @@ button {
   display:none;
   margin-top:20px;
   font-size:1.2em;
-  text-shadow: 1px 1px 3px #fff;
+  color: #3d1c2f;
+  text-shadow: 0 0 3px #fff;
 }
 
 /* FLOATING EMOJIS */
@@ -107,7 +110,7 @@ button {
   text-shadow: 1px 1px 6px rgba(0,0,0,0.2);
   white-space: nowrap;
   z-index: 0;
-  opacity: 0.85;
+  opacity: 0.75;
   font-size: 28px;
 }
 @keyframes moveRight {0%{transform:translateX(0);} 100%{transform:translateX(120vw);}}
@@ -117,54 +120,43 @@ button {
 
 /* SECTIONS */
 .section {
-  background: rgba(255, 228, 225, 0.85);
+  background: rgba(255, 228, 225, 0.9);
   backdrop-filter: blur(10px);
   padding: 25px;
   border-radius: 25px;
   box-shadow: 0 6px 20px rgba(255,182,193,0.3);
   text-align: center;
-  margin: 40px;
+  margin: 40px 20px;
   opacity: 0;
   transform: scale(0.8) translateY(20px);
   transition: all 0.8s ease-out;
-  z-index: 2;
+  color: #3d1c2f;
 }
 .section.visible {opacity:1; transform:scale(1) translateY(0);}
 .section::before, .section::after {
   content: "🌸✨💖";
   position: absolute;
   font-size: 18px;
-  opacity: 0.4;
+  opacity: 0.3;
 }
 .section::before { top: 5px; left: 10px; }
 .section::after { bottom: 5px; right: 10px; }
 
-/* CAT */
-.cat {
+/* CANDLE GLOW */
+.candle-glow {
   position: fixed;
-  bottom: 5%;
-  left: 5%;
-  width: 60px;
-  height: 60px;
-  background: #fff;
-  border-radius: 50%;
-  box-shadow: 0 0 0 2px #ccc;
-  z-index: 3;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 40px;
-  cursor: default;
+  bottom: -30%;
+  left: 50%;
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba(255,200,200,0.25), transparent 70%);
+  transform: translateX(-50%);
+  animation: flicker 5s infinite alternate;
+  pointer-events: none;
+  z-index: 1;
 }
-.cat::before { content: "🐾"; position: absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size: 40px; }
-@keyframes catMove {
-  0% {transform: translate(0,0) rotate(0deg);}
-  25% {transform: translate(2px,-2px) rotate(1deg);}
-  50% {transform: translate(0,0) rotate(0deg);}
-  75% {transform: translate(-2px,-1px) rotate(-1deg);}
-  100% {transform: translate(0,0) rotate(0deg);}
-}
-.cat { animation: catMove 2s infinite ease-in-out; }
+@keyframes flicker { 0% { opacity: 0.3; } 100% { opacity: 0.7; } }
+
 </style>
 </head>
 <body>
@@ -195,7 +187,7 @@ button {
   <audio id="song" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
 </div>
 
-<div class="cat" id="cat"></div>
+<div class="candle-glow"></div>
 
 <!-- SECTIONS -->
 <div class="card section"><h3>Kitni Khaas Aap Hai</h3><p>Aap meri zindagi ka sabse important hissa hain. Har din aapke bina adhoora lagta hai. 💖</p></div>
@@ -207,7 +199,13 @@ button {
 /* TYPING */
 const text = "Mujhse galti ho gayi… par dil se sirf aap ho ❤️";
 let i=0;
-function typeText(){ if(i<text.length){ document.getElementById("typing").innerHTML+=text.charAt(i); i++; setTimeout(typeText,60);}}
+function typeText(){ 
+  if(i<text.length){ 
+    document.getElementById("typing").innerHTML+=text.charAt(i); 
+    i++; 
+    setTimeout(typeText,60);
+  }
+}
 typeText();
 
 /* NO BUTTON RANDOM MOVEMENT */
@@ -268,25 +266,13 @@ setInterval(createCloud,1500);
 function revealSections(){
   const sections=document.querySelectorAll(".section");
   const windowBottom=window.innerHeight+window.scrollY;
-  sections.forEach(sec=>{const secTop=sec.offsetTop+sec.offsetHeight/4;if(windowBottom>secTop){sec.classList.add("visible");}});
+  sections.forEach(sec=>{
+    const secTop=sec.offsetTop+sec.offsetHeight/4;
+    if(windowBottom>secTop){sec.classList.add("visible");}
+  });
 }
 window.addEventListener("scroll",revealSections);
 window.addEventListener("load",revealSections);
-
-/* CAT ROAMING */
-const cat=document.getElementById("cat");
-let catX=5, catY=5;
-let catDirX=1, catDirY=1;
-function moveCat(){
-  catX += catDirX*0.3;
-  catY += catDirY*0.2;
-  if(catX>90 || catX<0) catDirX*=-1;
-  if(catY>80 || catY<0) catDirY*=-1;
-  cat.style.left=catX+"%";
-  cat.style.bottom=catY+"%";
-  requestAnimationFrame(moveCat);
-}
-moveCat();
 
 /* FLOATING EMOJIS LOOP */
 function floatingEmojisLoop(){
