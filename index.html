@@ -60,7 +60,7 @@ button {
   box-shadow: 0 4px 12px rgba(0,0,0,0.25);
   transition: transform 0.3s ease;
 }
-.yes { background: #fff; color: #ff4d6d; }
+.yes { background: #fff; color: #ff4d6d; position: relative; z-index:10;}
 .no { background: rgba(255,255,255,0.4); color: #fff; position: absolute; top:50%; left:50%; transform:translate(-50%,-50%); }
 
 /* NO BUTTON TEXT */
@@ -73,7 +73,7 @@ button {
 .promise {
   text-align: left;
   font-size: 0.95em;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.25);
   padding: 12px 18px;
   border-radius: 15px;
   list-style: none;
@@ -81,28 +81,20 @@ button {
   text-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 
-/* CANDLE GLOW */
-.candle-glow {
-  position: fixed;
-  bottom: -40%;
-  left: 50%;
-  width: 700px;
-  height: 700px;
-  background: radial-gradient(circle, rgba(255,200,200,0.4), transparent 70%);
-  transform: translateX(-50%);
-  animation: flicker 5s infinite alternate;
-  pointer-events: none;
-  z-index: 1;
-}
-@keyframes flicker {0% { opacity: 0.4; } 100% { opacity: 0.85; }}
+/* FLOATING CLOUDS */
+.fcloud {position: fixed; pointer-events:none; color:#fff; font-weight:bold; text-shadow:1px 1px 6px rgba(0,0,0,0.2); white-space: nowrap; z-index:0; opacity:0.8;}
+@keyframes moveRight {0%{transform:translateX(0);} 100%{transform:translateX(120vw);}}
+@keyframes moveLeft {0%{transform:translateX(0);} 100%{transform:translateX(-120vw);}}
+.fcloud[data-direction="left"] {animation-name: moveLeft; animation-timing-function: linear;}
+.fcloud[data-direction="right"] {animation-name: moveRight; animation-timing-function: linear;}
 
-/* SECTIONS */
+/* SECTIONS AS FLOATING NOTES */
 .section {
-  background: rgba(255, 192, 203, 0.6);
-  backdrop-filter: blur(8px);
+  background: rgba(255, 228, 225, 0.85);
+  backdrop-filter: blur(10px);
   padding: 25px;
-  border-radius: 20px;
-  box-shadow: 0 6px 20px rgba(255,182,193,0.2);
+  border-radius: 25px;
+  box-shadow: 0 6px 20px rgba(255,182,193,0.3);
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -110,10 +102,12 @@ button {
   transform: scale(0.8) translateY(20px);
   transition: all 0.8s ease-out;
   z-index: 2;
+  max-width: 450px;
+  margin: 40px;
 }
 .section.visible {opacity:1; transform:scale(1) translateY(0);}
 .section::before, .section::after {
-  content: "💖✨🌸";
+  content: "🌸✨💖";
   position: absolute;
   font-size: 18px;
   opacity: 0.4;
@@ -123,20 +117,7 @@ button {
 
 /* FLOATING EMOJIS */
 .femoji { position: fixed; top: -10px; font-size: 20px; animation: fallSway linear forwards; pointer-events: none; z-index:1;}
-@keyframes fallSway {
-  0% { transform: translate(0,0) rotate(0deg);}
-  25% { transform: translate(20px,25vh) rotate(90deg);}
-  50% { transform: translate(-20px,50vh) rotate(180deg);}
-  75% { transform: translate(20px,75vh) rotate(270deg);}
-  100% { transform: translate(0,110vh) rotate(360deg); opacity:0;}
-}
-
-/* FLOATING CLOUDS */
-.fcloud {position: fixed; pointer-events:none; color:#fff; font-weight:bold; text-shadow:1px 1px 6px rgba(0,0,0,0.2); white-space: nowrap; z-index:0; opacity:0.8;}
-@keyframes moveRight {0%{transform:translateX(0);} 100%{transform:translateX(120vw);}}
-@keyframes moveLeft {0%{transform:translateX(0);} 100%{transform:translateX(-120vw);}}
-.fcloud {animation-name: moveRight; animation-timing-function: linear;}
-.fcloud[data-direction="left"] {animation-name: moveLeft;}
+@keyframes fallSway {0%{transform:translate(0,0) rotate(0deg);} 25%{transform:translate(20px,25vh) rotate(90deg);} 50%{transform:translate(-20px,50vh) rotate(180deg);} 75%{transform:translate(20px,75vh) rotate(270deg);} 100%{transform:translate(0,110vh) rotate(360deg); opacity:0;}}
 
 /* EYE ANIMATION */
 .eye-container {position: relative; width: 60px; height: 60px; margin: 15px auto;}
@@ -148,14 +129,8 @@ button {
 .smile.show {opacity:1;}
 
 /* CARD SPARKLES */
-.card::before, .card::after {
-  content: "✨💖";
-  position: absolute;
-  font-size: 16px;
-  opacity: 0.6;
-}
-.card::before {top:8px; left:10px;}
-.card::after {bottom:8px; right:10px;}
+.card::before, .card::after {content: "✨💖"; position: absolute; font-size: 16px; opacity: 0.6;}
+.card::before {top:8px; left:10px;} .card::after {bottom:8px; right:10px;}
 </style>
 </head>
 <body>
@@ -173,7 +148,7 @@ button {
   </div>
   
   <h2 id="typing"></h2>
-  <p>Kya aap mujhe maaf karengi? 🥺</p>
+  <p>Maaf Kardo Naaaa? 🥺</p>
 
   <div style="position: relative; height: 70px;">
     <button class="yes" onclick="yesClicked()">YES ❤️</button>
@@ -183,22 +158,18 @@ button {
   <div id="noText"></div>
 
   <ul class="promise">
-    <li>☑️ Kabhi ignore nahi karunga</li>
-    <li>☑️ Gussa aaya toh pehle aapki baat sununga</li>
-    <li>☑️ Daily time + respect pakka</li>
+    <li>☑️ Kabhi ignore nai kartun</li>
+    <li>☑️ Har waqt apki baat suntun</li>
+    <li>☑️ Galti repeat nai kartun</li>
     <li>☑️ Aapki smile = meri zimmedari</li>
   </ul>
 
-  <p style="font-size:0.9em; opacity:0.9;">
-    Aapko chocolates pasand hai na 🍫  
-    isliye poori duniya chocolate-y bana di ❤️
-  </p>
+  <p style="font-size:0.9em; opacity:0.9;">Aapko chocolates pasand hai na 🍫 isliye poori duniya chocolate-y bana di ❤️</p>
 
   <div id="yesMsg">
     😭❤️ THANK YOU JAAN  
     <br><br>
-    Aapne maaf kar diya…  
-    main aapka hi hoon.  
+    Heheheheheheheehheheheheeh.  
     <br><br>
     <strong>I love you endlessly.</strong>
   </div>
@@ -208,11 +179,11 @@ button {
 
 <div class="candle-glow"></div>
 
-<!-- SECTIONS -->
-<div class="card section"><h3>Kitni Khaas Aap Hai</h3><p>Aap meri zindagi ka sabse important hissa hain. Har din aapke bina adhoora lagta hai. 💖</p></div>
-<div class="card section"><h3>Gussa Na Rahiye</h3><p>Mujhse gussa na rahiye… main hamesha aapki khushi aur smile ke liye jeeta hoon. 🥺❤️</p></div>
-<div class="card section"><h3>Aapki Khubsurti</h3><p>Aapki muskaan aur aankhon ki chamak sabse khoobsurat hai. ✨</p></div>
-<div class="card section"><h3>Maafi</h3><p>Mujhse jo galti hui, uske liye dil se maafi chahta hoon. Aap meri zindagi ka sabse important hissa hain. 😔❤️</p></div>
+<!-- SECTIONS AS STICKY NOTES -->
+<div class="card section"><h3>Kitni Khaas Aap Hai</h3><p>Aap meri zindagi ka sabse important hissa hain. Saath raho bas. 💖</p></div>
+<div class="card section"><h3>Gussa Na Rahiye</h3><p>Mujhse gussa na rahiye… Maanjao na shonuuuu pleazzzzzzzzzzzz. 🥺❤️</p></div>
+<div class="card section"><h3>Aapki Khubsurti</h3><p>ufff aapke eys, ufff apki smile, uffffffffff. ✨</p></div>
+<div class="card section"><h3>Maafi</h3><p>Galti hogayi apka bacha samajh ke maaf kardo 😔❤️</p></div>
 
 <script>
 /* TYPING EFFECT */
@@ -221,16 +192,15 @@ let i=0;
 function typeText(){ if(i<text.length){ document.getElementById("typing").innerHTML+=text.charAt(i); i++; setTimeout(typeText,60);}}
 typeText();
 
-/* NO BUTTON IMPOSSIBLE TO CLICK */
+/* NO BUTTON RANDOM CIRCLE MOVEMENT */
 const noBtn=document.getElementById("noBtn");
-const noLines=["Itni sakht bhi mat baniye 🥺","Dil toot raha hai yaar 💔","Ek last chance please 😭","Aap nahi maanti toh main kaise maanunga 😔","YES dabane me kuch nahi jaata 🙈"];
+const noLines=["Itni sakht bhi mat baniye 🥺","Yes button bazu hai","NOPE","Wrong button","YES dabane me kuch nahi jaata 🙈"];
 let idx=0;
+const centerX=150, centerY=35, radius=80; // relative to parent
 noBtn.addEventListener("mouseenter",()=>{ 
-  const parent=noBtn.parentElement;
-  const maxX=parent.clientWidth-noBtn.clientWidth;
-  const maxY=parent.clientHeight-noBtn.clientHeight;
-  const x=Math.random()*maxX;
-  const y=Math.random()*maxY;
+  const angle=Math.random()*2*Math.PI;
+  const x=centerX + radius*Math.cos(angle);
+  const y=centerY + radius*Math.sin(angle);
   noBtn.style.transform=`translate(${x}px,${y}px)`;
   document.getElementById("noText").innerText=noLines[idx];
   idx=(idx+1)%noLines.length;
@@ -264,19 +234,14 @@ function confetti(){
   const colors=["#ff4d6d","#ffcc66","#66ffcc","#66ccff","#ff66cc"];
   for(let i=0;i<50;i++){
     const c=document.createElement("div");
-    c.style.position="fixed";
-    c.style.width=c.style.height=Math.random()*8+4+"px";
+    c.style.position="fixed"; c.style.width=c.style.height=Math.random()*8+4+"px";
     c.style.background=colors[Math.floor(Math.random()*colors.length)];
-    c.style.left=Math.random()*100+"vw";
-    c.style.top="-10px";
-    c.style.borderRadius="50%";
-    c.style.opacity=0.9;
-    c.style.pointerEvents="none";
-    c.style.zIndex=10;
+    c.style.left=Math.random()*100+"vw"; c.style.top="-10px";
+    c.style.borderRadius="50%"; c.style.opacity=0.9;
+    c.style.pointerEvents="none"; c.style.zIndex=10;
     c.style.transform=`rotate(${Math.random()*360}deg)`;
     c.style.animation=`fallSway ${Math.random()*3+2}s forwards`;
-    document.body.appendChild(c);
-    setTimeout(()=>c.remove(),5000);
+    document.body.appendChild(c); setTimeout(()=>c.remove(),5000);
   }
 }
 
@@ -290,8 +255,8 @@ function createCloud(){
   cloud.style.fontSize=(Math.random()*24+16)+"px";
   const fromLeft=Math.random()>0.5;
   cloud.style.left=fromLeft?"-150px":"100vw";
-  cloud.style.animationDuration=(Math.random()*20+15)+"s";
   cloud.dataset.direction=fromLeft?"right":"left";
+  cloud.style.animationDuration=(Math.random()*20+15)+"s";
   document.body.appendChild(cloud);
   setTimeout(()=>cloud.remove(),parseFloat(cloud.style.animationDuration)*1000);
 }
