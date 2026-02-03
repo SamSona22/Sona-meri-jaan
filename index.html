@@ -5,43 +5,43 @@
 <title>Meri Jaan ❤️</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-/* 🌸 BODY & GRADIENT BACKGROUND */
+/* BODY & GRADIENT */
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  color: #fff;
+  color: #3d1c2f;
   overflow-x: hidden;
   background: linear-gradient(120deg, #ffc1cc, #ffdee1, #ffd6f0, #ffe4f7);
   background-size: 400% 400%;
-  animation: bgShift 25s ease infinite;
+  animation: bgShift 30s ease infinite;
 }
 
-/* Gradient shift animation */
+/* GRADIENT SHIFT */
 @keyframes bgShift {
   0% {background-position:0% 50%;}
   50% {background-position:100% 50%;}
   100% {background-position:0% 50%;}
 }
 
-/* 🌟 CARD STYLING */
+/* CARD */
 .card {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.35);
   backdrop-filter: blur(15px);
   border-radius: 25px;
   padding: 35px;
   max-width: 500px;
   margin: 60px auto;
   text-align: center;
-  box-shadow: 0 8px 25px rgba(255, 182, 193, 0.4);
+  box-shadow: 0 8px 25px rgba(255,182,193,0.4);
   border: 1px solid rgba(255,182,193,0.5);
   position: relative;
   z-index: 5;
+  color: #3d1c2f;
   animation: pop 1s ease;
-  color: #3d1c2f; /* softer text for readability */
 }
 @keyframes pop {from {transform: scale(0.7); opacity:0;} to {transform: scale(1); opacity:1;}}
 
-/* ❤️ HEART ANIMATION */
+/* HEART */
 .heart {
   font-size: 50px;
   animation: beat 1s infinite;
@@ -67,7 +67,7 @@ button {
 .promise {
   text-align: left;
   font-size: 0.95em;
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.5);
   padding: 12px 18px;
   border-radius: 15px;
   list-style: none;
@@ -85,7 +85,7 @@ button {
   text-shadow: 0 0 3px #fff;
 }
 
-/* FLOATING EMOJIS */
+/* FLOATING EMOJIS & CHOCOLATES */
 .femoji {
   position: fixed;
   top: -10px;
@@ -155,7 +155,7 @@ button {
   pointer-events: none;
   z-index: 1;
 }
-@keyframes flicker { 0% { opacity: 0.3; } 100% { opacity: 0.7; } }
+@keyframes flicker {0% {opacity: 0.3;} 50% {opacity: 0.7;} 100% {opacity: 0.4;}}
 
 </style>
 </head>
@@ -230,20 +230,20 @@ function yesClicked(){
   hearts(); floatingEmojisLoop();
 }
 
-/* FLOATING EMOJIS */
+/* FLOATING EMOJIS & CHOCOLATES */
 function createFloatingEmoji(emoji){
   let e=document.createElement("div");
   e.className="femoji"; e.innerText=emoji;
   e.style.left=Math.random()*100+"%";
   e.style.fontSize=(Math.random()*20+16)+"px";
-  e.style.animationDuration=(Math.random()*3+4)+"s";
+  e.style.animationDuration=(Math.random()*5+5)+"s";
   document.body.appendChild(e);
-  setTimeout(()=>e.remove(),7000);
+  setTimeout(()=>e.remove(),12000);
 }
 function hearts(){for(let i=0;i<30;i++) createFloatingEmoji("❤️");}
-setInterval(()=>createFloatingEmoji("🍫"),500);
-setInterval(()=>createFloatingEmoji("💋"),700);
-setInterval(()=>createFloatingEmoji("✨"),400);
+setInterval(()=>createFloatingEmoji("🍫"),300); // Chocolates raining
+setInterval(()=>createFloatingEmoji("💋"),600);
+setInterval(()=>createFloatingEmoji("✨"),500);
 
 /* CLOUDS */
 const cloudTexts=["☁️ GUDIYA ☁️","☁️ SHONA ☁️","☁️ MERI JAAN ☁️","☁️ MERA BACHA ☁️"];
@@ -256,13 +256,13 @@ function createCloud(){
   const fromLeft=Math.random()>0.5;
   cloud.style.left=fromLeft?"-200px":"100vw";
   cloud.dataset.direction=fromLeft?"right":"left";
-  cloud.style.animationDuration=(Math.random()*25+20)+"s";
+  cloud.style.animationDuration=(Math.random()*30+25)+"s";
   document.body.appendChild(cloud);
   setTimeout(()=>cloud.remove(),parseFloat(cloud.style.animationDuration)*1000);
 }
 setInterval(createCloud,1500);
 
-/* SCROLL REVEAL SECTIONS */
+/* SCROLL SECTIONS */
 function revealSections(){
   const sections=document.querySelectorAll(".section");
   const windowBottom=window.innerHeight+window.scrollY;
@@ -274,7 +274,7 @@ function revealSections(){
 window.addEventListener("scroll",revealSections);
 window.addEventListener("load",revealSections);
 
-/* FLOATING EMOJIS LOOP */
+/* FLOATING MESSAGES LOOP */
 function floatingEmojisLoop(){
   const messages=["I ❤️ you","Forever yours","Mujhse kabhi na door jao","You are my world"];
   for(let i=0;i<5;i++){setTimeout(()=>createFloatingEmoji(messages[Math.floor(Math.random()*messages.length)]),i*500);}
@@ -282,3 +282,4 @@ function floatingEmojisLoop(){
 </script>
 </body>
 </html>
+
