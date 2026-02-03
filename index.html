@@ -6,22 +6,32 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-/* 🔴 Background & body */
+/* 🔴 Body & Animated Gradient Background */
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  background: radial-gradient(circle at top left, #ffc1cc, #ffdde1);
   color: #fff;
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: center;
   min-height: 100vh;
   overflow-x: hidden;
-  text-align: center;
-  padding-top: 50px;
+  scroll-behavior: smooth;
+
+  /* Gradient background */
+  background: linear-gradient(135deg, #ffb6c1, #ffc0cb, #ff69b4, #ff85b2);
+  background-size: 600% 600%;
+  animation: gradientShift 20s ease infinite;
 }
 
-/* Card styling */
+/* Gradient Animation */
+@keyframes gradientShift {
+  0% {background-position:0% 50%;}
+  50% {background-position:100% 50%;}
+  100% {background-position:0% 50%;}
+}
+
+/* Main Card Styling */
 .card {
   background: rgba(255,255,255,0.2);
   padding: 35px;
@@ -29,16 +39,18 @@ body {
   max-width: 500px;
   z-index: 2;
   backdrop-filter: blur(6px);
-  margin-bottom: 40px;
+  margin: 50px 20px 40px 20px;
+  text-align: center;
   animation: pop 1s ease;
 }
 
+/* Card Pop Animation */
 @keyframes pop {
   from {transform: scale(0.7); opacity:0}
   to {transform: scale(1); opacity:1}
 }
 
-/* Heart animation */
+/* Heart Animation */
 .heart {
   font-size: 50px;
   animation: beat 1s infinite;
@@ -55,15 +67,20 @@ button {
   margin: 8px;
   font-weight: bold;
   box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  transition: transform 0.2s;
 }
 .yes { background: #fff; color: #ff4d6d; }
 .no { background: rgba(255,255,255,0.4); color: #fff; position: relative; }
 
+/* NO button text display */
+#noText { min-height: 28px; margin-top: 10px; }
+
+/* YES message */
+#yesMsg { display:none; margin-top:20px; font-size:1.2em; }
+
 /* Promises */
 .promise { text-align: left; margin-top: 15px; font-size: 0.95em; }
 .promise li { margin: 6px 0; }
-#noText { min-height: 28px; margin-top: 10px; }
-#yesMsg { display:none; margin-top:20px; font-size:1.2em; }
 
 /* Candle Glow */
 .candle-glow {
@@ -114,13 +131,13 @@ button {
 }
 @keyframes sparkleAnim { to { transform: translateY(110vh) rotate(180deg); opacity:0;} }
 
-/* Section animations */
+/* Sections */
 .section {
   opacity: 0;
   transform: translateY(20px);
   animation: fadeIn 1s forwards;
   animation-delay: var(--delay, 0s);
-  margin-top: 30px;
+  margin: 30px 20px;
   background: rgba(255,255,255,0.1);
   padding: 20px;
   border-radius: 20px;
@@ -128,7 +145,6 @@ button {
 @keyframes fadeIn {
   to {opacity:1; transform: translateY(0);}
 }
-
 </style>
 </head>
 
@@ -143,7 +159,7 @@ button {
 
   <div>
     <button class="yes" onclick="yesClicked()">YES ❤️</button>
-    <button class="no" onmouseover="noHover(this)">NO 😤</button>
+    <button class="no" onmousemove="noHover(this,event)">NO 😤</button>
   </div>
 
   <div id="noText"></div>
@@ -169,13 +185,12 @@ button {
     <strong>I love you endlessly.</strong>
   </div>
 
-  <!-- Song link (replace with real mp3 if you have) -->
   <audio id="song" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
 </div>
 
 <div class="candle-glow"></div>
 
-<!-- 🥰 New Sections -->
+<!-- Sections -->
 <div class="card section" style="--delay:0.5s">
   <h3>Kitni Khaas Aap Hai</h3>
   <p>Aap meri zindagi ka sabse important hissa hain. Har din aapke bina adhoora lagta hai. 💖</p>
@@ -209,7 +224,7 @@ function typeText(){
 }
 typeText();
 
-/* NO button lines */
+/* NO button messages */
 const noLines = [
  "Itni sakht bhi mat baniye 🥺",
  "Dil toot raha hai yaar 💔",
@@ -219,9 +234,12 @@ const noLines = [
 ];
 let idx = 0;
 
-function noHover(btn){
-  btn.style.transform =
-    `translate(${Math.random()*200-100}px,${Math.random()*200-100}px)`;
+function noHover(btn, e){
+  const x = e.clientX;
+  const y = e.clientY;
+  const newX = Math.random() * window.innerWidth;
+  const newY = Math.random() * window.innerHeight;
+  btn.style.transform = `translate(${newX - x}px, ${newY - y}px) rotate(${Math.random()*360}deg) scale(${Math.random()+0.8})`;
   document.getElementById("noText").innerText = noLines[idx];
   idx = (idx+1)%noLines.length;
 }
@@ -230,12 +248,13 @@ function noHover(btn){
 function yesClicked(){
   document.getElementById("yesMsg").style.display="block";
   
-  // Song play from specific line (change 30 to your line's timestamp)
   const audio = document.getElementById("song");
-  audio.currentTime = 30; // timestamp in seconds where line starts
+  audio.currentTime = 30;
   audio.play();
   
   hearts();
+  confetti();
+  loveNotesLoop();
 }
 
 /* ❤️ Hearts */
@@ -271,6 +290,60 @@ setInterval(()=>{
   document.body.appendChild(s);
   setTimeout(()=>s.remove(),7000);
 },400);
+
+/* 🎉 Confetti */
+function confetti() {
+  const colors = ["#ff4d6d","#ffcc66","#66ffcc","#66ccff","#ff66cc"];
+  for(let i=0;i<50;i++){
+    const c = document.createElement("div");
+    c.style.position = "fixed";
+    c.style.width = c.style.height = Math.random()*8+4+"px";
+    c.style.background = colors[Math.floor(Math.random()*colors.length)];
+    c.style.left = Math.random()*100+"vw";
+    c.style.top = "-10px";
+    c.style.borderRadius = "50%";
+    c.style.opacity = 0.9;
+    c.style.pointerEvents = "none";
+    c.style.zIndex = 10;
+    c.style.transform = `rotate(${Math.random()*360}deg)`;
+    c.style.animation = `confettiFall ${Math.random()*3+2}s forwards`;
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),5000);
+  }
+}
+
+/* Confetti animation */
+const style = document.createElement('style');
+style.innerHTML = `@keyframes confettiFall { to { transform: translateY(110vh) rotate(720deg); opacity:0; } }`;
+document.head.appendChild(style);
+
+/* 💌 Floating Love Notes */
+function loveNotesLoop() {
+  const messages = ["I ❤️ you","Forever yours","Mujhse kabhi na door jao","You are my world"];
+  for(let i=0;i<5;i++){
+    setTimeout(()=>loveNote(messages[Math.floor(Math.random()*messages.length)]), i*500);
+  }
+}
+function loveNote(msg){
+  const div = document.createElement("div");
+  div.innerText = msg;
+  div.style.position="fixed";
+  div.style.top="0px";
+  div.style.left=Math.random()*90+"vw";
+  div.style.fontSize="20px";
+  div.style.color="white";
+  div.style.fontWeight="bold";
+  div.style.opacity="0.9";
+  div.style.pointerEvents="none";
+  div.style.zIndex="10";
+  div.style.animation=`floatText ${Math.random()*4+3}s linear forwards`;
+  document.body.appendChild(div);
+  setTimeout(()=>div.remove(),5000);
+}
+const style2 = document.createElement('style');
+style2.innerHTML = `@keyframes floatText { to { transform: translateY(110vh); opacity:0; } }`;
+document.head.appendChild(style2);
+
 </script>
 
 </body>
