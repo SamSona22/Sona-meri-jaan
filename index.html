@@ -17,6 +17,7 @@ body {
   overflow-x: hidden;
   scroll-behavior: smooth;
   position: relative;
+  background: #ffc1d6;
 }
 
 /* ANIMATED BLURRED GRADIENT BACKGROUND */
@@ -145,6 +146,37 @@ button {
 .shy {opacity:1;}
 .smile {width:20px; height:6px; background:#ff4d6d; border-radius:0 0 10px 10px; position:absolute; bottom:8px; left:20px; opacity:0; transition:0.5s ease;}
 .smile.show {opacity:1;}
+
+/* CUTE CAT */
+.cat {
+  position: fixed;
+  bottom: 5%;
+  left: 5%;
+  width: 60px;
+  height: 60px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px #ccc;
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 40px;
+  cursor: default;
+  transition: transform 0.3s ease;
+}
+.cat::before { content: "🐾"; position: absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size: 40px; }
+
+/* CAT IDLE TAIL/HEAD BOUNCE */
+@keyframes catMove {
+  0% {transform: translate(0,0) rotate(0deg);}
+  25% {transform: translate(2px,-2px) rotate(1deg);}
+  50% {transform: translate(0,0) rotate(0deg);}
+  75% {transform: translate(-2px,-1px) rotate(-1deg);}
+  100% {transform: translate(0,0) rotate(0deg);}
+}
+.cat { animation: catMove 2s infinite ease-in-out; }
+
 </style>
 </head>
 <body>
@@ -191,20 +223,22 @@ button {
   <audio id="song" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
 </div>
 
-<!-- SECTIONS AS STICKY NOTES -->
+<div class="cat" id="cat"></div>
+
+<!-- SECTIONS -->
 <div class="card section"><h3>Kitni Khaas Aap Hai</h3><p>Aap meri zindagi ka sabse important hissa hain. Har din aapke bina adhoora lagta hai. 💖</p></div>
 <div class="card section"><h3>Gussa Na Rahiye</h3><p>Mujhse gussa na rahiye… main hamesha aapki khushi aur smile ke liye jeeta hoon. 🥺❤️</p></div>
 <div class="card section"><h3>Aapki Khubsurti</h3><p>Aapki muskaan aur aankhon ki chamak sabse khoobsurat hai. ✨</p></div>
 <div class="card section"><h3>Maafi</h3><p>Mujhse jo galti hui, uske liye dil se maafi chahta hoon. Aap meri zindagi ka sabse important hissa hain. 😔❤️</p></div>
 
 <script>
-/* TYPING EFFECT */
+/* TYPING */
 const text = "Mujhse galti ho gayi… par dil se sirf aap ho ❤️";
 let i=0;
 function typeText(){ if(i<text.length){ document.getElementById("typing").innerHTML+=text.charAt(i); i++; setTimeout(typeText,60);}}
 typeText();
 
-/* NO BUTTON RANDOM CIRCLE MOVEMENT */
+/* NO BUTTON RANDOM MOVEMENT */
 const noBtn=document.getElementById("noBtn");
 const noLines=["Itni sakht bhi mat baniye 🥺","Dil toot raha hai yaar 💔","Ek last chance please 😭","Aap nahi maanti toh main kaise maanunga 😔","YES dabane me kuch nahi jaata 🙈"];
 let idx=0;
@@ -266,44 +300,4 @@ function createCloud(){
   cloud.style.top=(Math.random()*50+10)+"vh";
   cloud.style.fontSize=(Math.random()*28+18)+"px";
   const fromLeft=Math.random()>0.5;
-  cloud.style.left=fromLeft?"-200px":"100vw";
-  cloud.dataset.direction=fromLeft?"right":"left";
-  cloud.style.animationDuration=(Math.random()*25+20)+"s";
-  document.body.appendChild(cloud);
-  setTimeout(()=>cloud.remove(),parseFloat(cloud.style.animationDuration)*1000);
-}
-setInterval(createCloud,1500);
-
-/* SCROLL REVEAL SECTIONS */
-function revealSections(){
-  const sections=document.querySelectorAll(".section");
-  const windowBottom=window.innerHeight+window.scrollY;
-  sections.forEach(sec=>{const secTop=sec.offsetTop+sec.offsetHeight/4;if(windowBottom>secTop){sec.classList.add("visible");}});
-}
-window.addEventListener("scroll",revealSections);
-window.addEventListener("load",revealSections);
-
-/* EYE FOLLOW + SHY/SMILE/BLUSH */
-const pupil=document.getElementById("pupil");
-const blush=document.getElementById("blush");
-const smile=document.getElementById("smile");
-document.addEventListener("mousemove",(e)=>{
-  const eyeRect=pupil.parentElement.getBoundingClientRect();
-  const centerX=eyeRect.left+eyeRect.width/2;
-  const centerY=eyeRect.top+eyeRect.height/2;
-  const dx=(e.clientX-centerX)/8;
-  const dy=(e.clientY-centerY)/8;
-  pupil.style.transform=`translate(${dx}px,${dy}px)`;
-});
-setInterval(()=>{
-  blush.classList.toggle("shy");
-  smile.classList.toggle("show");
-},4000);
-
-function floatingEmojisLoop(){
-  const messages=["I ❤️ you","Forever yours","Mujhse kabhi na door jao","You are my world"];
-  for(let i=0;i<5;i++){setTimeout(()=>createFloatingEmoji(messages[Math.floor(Math.random()*messages.length)]),i*500);}
-}
-</script>
-</body>
-</html>
+  cloud.style.left=fromLef
