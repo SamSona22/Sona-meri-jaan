@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <title>Sirf Aap ❤️</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <style>
 /* BODY & GRADIENT BACKGROUND */
 body {
@@ -17,9 +16,19 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   scroll-behavior: smooth;
-  background: linear-gradient(135deg, #ffd6e0, #ffc1d6, #ffb6c1);
-  background-size: 600% 600%;
-  animation: gradientShift 25s ease infinite;
+  position: relative;
+}
+
+/* ANIMATED BLURRED GRADIENT BACKGROUND */
+body::before {
+  content: "";
+  position: fixed;
+  top:0; left:0; width:100%; height:100%;
+  background: linear-gradient(270deg, #ffd6e0, #ffc1d6, #ffb6c1, #ffe4e1, #ffccdd);
+  background-size: 1000% 1000%;
+  filter: blur(60px);
+  animation: gradientShift 30s ease infinite;
+  z-index: -10;
 }
 @keyframes gradientShift {
   0% {background-position:0% 50%;}
@@ -64,7 +73,7 @@ button {
 .no { background: rgba(255,255,255,0.4); color: #fff; position: absolute; top:50%; left:50%; transform:translate(-50%,-50%); }
 
 /* NO BUTTON TEXT */
-#noText { min-height: 28px; margin-top: 10px; font-weight: bold; }
+#noText { min-height: 28px; margin-top: 10px; font-weight: bold; text-shadow:0 1px 3px #000; }
 
 /* YES MESSAGE */
 #yesMsg { display:none; margin-top:20px; font-size:1.2em; text-shadow: 1px 1px 3px #fff; }
@@ -82,13 +91,22 @@ button {
 }
 
 /* FLOATING CLOUDS */
-.fcloud {position: fixed; pointer-events:none; color:#fff; font-weight:bold; text-shadow:1px 1px 6px rgba(0,0,0,0.2); white-space: nowrap; z-index:0; opacity:0.8;}
+.fcloud {
+  position: fixed;
+  pointer-events: none;
+  font-weight: bold;
+  text-shadow: 1px 1px 6px rgba(0,0,0,0.2);
+  white-space: nowrap;
+  z-index: 0;
+  opacity: 0.9;
+  font-size: 28px;
+}
 @keyframes moveRight {0%{transform:translateX(0);} 100%{transform:translateX(120vw);}}
 @keyframes moveLeft {0%{transform:translateX(0);} 100%{transform:translateX(-120vw);}}
 .fcloud[data-direction="left"] {animation-name: moveLeft; animation-timing-function: linear;}
 .fcloud[data-direction="right"] {animation-name: moveRight; animation-timing-function: linear;}
 
-/* SECTIONS AS FLOATING NOTES */
+/* SECTIONS AS STICKY NOTES */
 .section {
   background: rgba(255, 228, 225, 0.85);
   backdrop-filter: blur(10px);
@@ -127,10 +145,6 @@ button {
 .shy {opacity:1;}
 .smile {width:20px; height:6px; background:#ff4d6d; border-radius:0 0 10px 10px; position:absolute; bottom:8px; left:20px; opacity:0; transition:0.5s ease;}
 .smile.show {opacity:1;}
-
-/* CARD SPARKLES */
-.card::before, .card::after {content: "✨💖"; position: absolute; font-size: 16px; opacity: 0.6;}
-.card::before {top:8px; left:10px;} .card::after {bottom:8px; right:10px;}
 </style>
 </head>
 <body>
@@ -148,7 +162,7 @@ button {
   </div>
   
   <h2 id="typing"></h2>
-  <p>Maaf Kardo Naaaa? 🥺</p>
+  <p>Kya aap mujhe maaf karengi? 🥺</p>
 
   <div style="position: relative; height: 70px;">
     <button class="yes" onclick="yesClicked()">YES ❤️</button>
@@ -158,9 +172,9 @@ button {
   <div id="noText"></div>
 
   <ul class="promise">
-    <li>☑️ Kabhi ignore nai kartun</li>
-    <li>☑️ Har waqt apki baat suntun</li>
-    <li>☑️ Galti repeat nai kartun</li>
+    <li>☑️ Kabhi ignore nahi karunga</li>
+    <li>☑️ Gussa aaya toh pehle aapki baat sununga</li>
+    <li>☑️ Daily time + respect pakka</li>
     <li>☑️ Aapki smile = meri zimmedari</li>
   </ul>
 
@@ -169,7 +183,7 @@ button {
   <div id="yesMsg">
     😭❤️ THANK YOU JAAN  
     <br><br>
-    Heheheheheheheehheheheheeh.  
+    Aapne maaf kar diya… main aapka hi hoon.  
     <br><br>
     <strong>I love you endlessly.</strong>
   </div>
@@ -177,13 +191,11 @@ button {
   <audio id="song" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
 </div>
 
-<div class="candle-glow"></div>
-
 <!-- SECTIONS AS STICKY NOTES -->
-<div class="card section"><h3>Kitni Khaas Aap Hai</h3><p>Aap meri zindagi ka sabse important hissa hain. Saath raho bas. 💖</p></div>
-<div class="card section"><h3>Gussa Na Rahiye</h3><p>Mujhse gussa na rahiye… Maanjao na shonuuuu pleazzzzzzzzzzzz. 🥺❤️</p></div>
-<div class="card section"><h3>Aapki Khubsurti</h3><p>ufff aapke eys, ufff apki smile, uffffffffff. ✨</p></div>
-<div class="card section"><h3>Maafi</h3><p>Galti hogayi apka bacha samajh ke maaf kardo 😔❤️</p></div>
+<div class="card section"><h3>Kitni Khaas Aap Hai</h3><p>Aap meri zindagi ka sabse important hissa hain. Har din aapke bina adhoora lagta hai. 💖</p></div>
+<div class="card section"><h3>Gussa Na Rahiye</h3><p>Mujhse gussa na rahiye… main hamesha aapki khushi aur smile ke liye jeeta hoon. 🥺❤️</p></div>
+<div class="card section"><h3>Aapki Khubsurti</h3><p>Aapki muskaan aur aankhon ki chamak sabse khoobsurat hai. ✨</p></div>
+<div class="card section"><h3>Maafi</h3><p>Mujhse jo galti hui, uske liye dil se maafi chahta hoon. Aap meri zindagi ka sabse important hissa hain. 😔❤️</p></div>
 
 <script>
 /* TYPING EFFECT */
@@ -194,9 +206,9 @@ typeText();
 
 /* NO BUTTON RANDOM CIRCLE MOVEMENT */
 const noBtn=document.getElementById("noBtn");
-const noLines=["Itni sakht bhi mat baniye 🥺","Yes button bazu hai","NOPE","Wrong button","YES dabane me kuch nahi jaata 🙈"];
+const noLines=["Itni sakht bhi mat baniye 🥺","Dil toot raha hai yaar 💔","Ek last chance please 😭","Aap nahi maanti toh main kaise maanunga 😔","YES dabane me kuch nahi jaata 🙈"];
 let idx=0;
-const centerX=150, centerY=35, radius=80; // relative to parent
+const centerX=150, centerY=35, radius=80;
 noBtn.addEventListener("mouseenter",()=>{ 
   const angle=Math.random()*2*Math.PI;
   const x=centerX + radius*Math.cos(angle);
@@ -246,21 +258,21 @@ function confetti(){
 }
 
 /* CLOUDS */
-const cloudTexts=["GUDIYA","SHONA","MERI JAAN","MERA BACHA"];
+const cloudTexts=["☁️ GUDIYA ☁️","☁️ SHONA ☁️","☁️ MERI JAAN ☁️","☁️ MERA BACHA ☁️"];
 function createCloud(){
   const cloud=document.createElement("div");
   cloud.className="fcloud";
   cloud.innerText=cloudTexts[Math.floor(Math.random()*cloudTexts.length)];
   cloud.style.top=(Math.random()*50+10)+"vh";
-  cloud.style.fontSize=(Math.random()*24+16)+"px";
+  cloud.style.fontSize=(Math.random()*28+18)+"px";
   const fromLeft=Math.random()>0.5;
-  cloud.style.left=fromLeft?"-150px":"100vw";
+  cloud.style.left=fromLeft?"-200px":"100vw";
   cloud.dataset.direction=fromLeft?"right":"left";
-  cloud.style.animationDuration=(Math.random()*20+15)+"s";
+  cloud.style.animationDuration=(Math.random()*25+20)+"s";
   document.body.appendChild(cloud);
   setTimeout(()=>cloud.remove(),parseFloat(cloud.style.animationDuration)*1000);
 }
-setInterval(createCloud,2000);
+setInterval(createCloud,1500);
 
 /* SCROLL REVEAL SECTIONS */
 function revealSections(){
