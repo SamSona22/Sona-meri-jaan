@@ -5,25 +5,24 @@
 <title>Meri Jaan ❤️</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-/* BODY & GRADIENT */
+/* BODY & SOFT GRADIENT + BLUR */
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  color: #3d1c2f;
   overflow-x: hidden;
-  background: linear-gradient(120deg, #ffc1cc, #ffdee1, #ffd6f0, #ffe4f7);
+  color: #3d1c2f;
+  background: linear-gradient(120deg, #ffc1cc, #ffdde1, #ffd6f0, #ffe4f7);
   background-size: 400% 400%;
   animation: bgShift 30s ease infinite;
+  position: relative;
 }
-
-/* GRADIENT SHIFT */
 @keyframes bgShift {
   0% {background-position:0% 50%;}
   50% {background-position:100% 50%;}
   100% {background-position:0% 50%;}
 }
 
-/* CARD */
+/* MAIN CARD */
 .card {
   background: rgba(255, 255, 255, 0.35);
   backdrop-filter: blur(15px);
@@ -67,7 +66,7 @@ button {
 .promise {
   text-align: left;
   font-size: 0.95em;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.6);
   padding: 12px 18px;
   border-radius: 15px;
   list-style: none;
@@ -120,7 +119,7 @@ button {
 
 /* SECTIONS */
 .section {
-  background: rgba(255, 228, 225, 0.9);
+  background: rgba(255, 228, 225, 0.95);
   backdrop-filter: blur(10px);
   padding: 25px;
   border-radius: 25px;
@@ -131,6 +130,7 @@ button {
   transform: scale(0.8) translateY(20px);
   transition: all 0.8s ease-out;
   color: #3d1c2f;
+  position: relative;
 }
 .section.visible {opacity:1; transform:scale(1) translateY(0);}
 .section::before, .section::after {
@@ -155,7 +155,31 @@ button {
   pointer-events: none;
   z-index: 1;
 }
-@keyframes flicker {0% {opacity: 0.3;} 50% {opacity: 0.7;} 100% {opacity: 0.4;}}
+@keyframes flicker {0% {opacity:0.3;} 50% {opacity:0.7;} 100% {opacity:0.4;}}
+
+/* SPARKLES */
+.sparkle {
+  position: fixed;
+  width: 6px; height: 6px;
+  background: #fff;
+  border-radius: 50%;
+  opacity: 0.8;
+  animation: sparkleUp linear forwards;
+  z-index: 2;
+}
+@keyframes sparkleUp { to { transform: translateY(-80vh) rotate(180deg); opacity:0;} }
+
+/* CHOCOLATE PIECES IN BACKGROUND */
+.chocolate {
+  position: fixed;
+  top: -50px;
+  font-size: 28px;
+  opacity: 0.7;
+  pointer-events: none;
+  z-index: 0;
+  animation: fallChoco linear forwards;
+}
+@keyframes fallChoco { to {transform: translateY(110vh) rotate(360deg); opacity:0;} }
 
 </style>
 </head>
@@ -241,7 +265,7 @@ function createFloatingEmoji(emoji){
   setTimeout(()=>e.remove(),12000);
 }
 function hearts(){for(let i=0;i<30;i++) createFloatingEmoji("❤️");}
-setInterval(()=>createFloatingEmoji("🍫"),300); // Chocolates raining
+setInterval(()=>createFloatingEmoji("🍫"),300);
 setInterval(()=>createFloatingEmoji("💋"),600);
 setInterval(()=>createFloatingEmoji("✨"),500);
 
@@ -261,6 +285,31 @@ function createCloud(){
   setTimeout(()=>cloud.remove(),parseFloat(cloud.style.animationDuration)*1000);
 }
 setInterval(createCloud,1500);
+
+/* SPARKLES */
+function createSparkle(){
+  const s=document.createElement("div");
+  s.className="sparkle";
+  s.style.left=Math.random()*100+"vw";
+  s.style.width=s.style.height=(Math.random()*6+4)+"px";
+  s.style.animationDuration=(Math.random()*5+4)+"s";
+  document.body.appendChild(s);
+  setTimeout(()=>s.remove(),9000);
+}
+setInterval(createSparkle,400);
+
+/* FALLING CHOCOLATE PIECES */
+function createChoco(){
+  const c=document.createElement("div");
+  c.className="chocolate";
+  c.innerText="🍫";
+  c.style.left=Math.random()*100+"vw";
+  c.style.fontSize=(Math.random()*30+20)+"px";
+  c.style.animationDuration=(Math.random()*5+6)+"s";
+  document.body.appendChild(c);
+  setTimeout(()=>c.remove(),12000);
+}
+setInterval(createChoco,700);
 
 /* SCROLL SECTIONS */
 function revealSections(){
@@ -282,4 +331,5 @@ function floatingEmojisLoop(){
 </script>
 </body>
 </html>
+
 
