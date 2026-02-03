@@ -29,25 +29,23 @@ body {
 
 /* MAIN CARD */
 .card {
-  background: rgba(255,255,255,0.2);
+  background: rgba(255, 192, 203, 0.35);
+  backdrop-filter: blur(12px);
   padding: 35px;
   border-radius: 25px;
   max-width: 500px;
-  z-index: 2;
-  backdrop-filter: blur(6px);
-  margin: 50px 20px 40px 20px;
+  margin: 50px 20px;
   text-align: center;
-  animation: pop 1s ease;
   position: relative;
+  box-shadow: 0 8px 25px rgba(255, 182, 193, 0.4);
+  border: 2px solid rgba(255, 182, 193, 0.6);
+  animation: pop 1s ease;
+  z-index: 5;
 }
-
 @keyframes pop {from {transform: scale(0.7); opacity:0} to {transform: scale(1); opacity:1}}
 
 /* HEART ANIMATION */
-.heart {
-  font-size: 50px;
-  animation: beat 1s infinite;
-}
+.heart {font-size: 50px; animation: beat 1s infinite;}
 @keyframes beat {50% {transform: scale(1.3)}}
 
 /* BUTTONS */
@@ -63,17 +61,25 @@ button {
   transition: transform 0.3s ease;
 }
 .yes { background: #fff; color: #ff4d6d; }
-.no { background: rgba(255,255,255,0.4); color: #fff; position: relative; }
+.no { background: rgba(255,255,255,0.4); color: #fff; position: absolute; top:50%; left:50%; transform:translate(-50%,-50%); }
 
 /* NO BUTTON TEXT */
 #noText { min-height: 28px; margin-top: 10px; font-weight: bold; }
 
 /* YES MESSAGE */
-#yesMsg { display:none; margin-top:20px; font-size:1.2em; }
+#yesMsg { display:none; margin-top:20px; font-size:1.2em; text-shadow: 1px 1px 3px #fff; }
 
-/* PROMISES */
-.promise { text-align: left; margin-top: 15px; font-size: 0.95em; }
-.promise li { margin: 6px 0; }
+/* PROMISE LIST */
+.promise {
+  text-align: left;
+  font-size: 0.95em;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 12px 18px;
+  border-radius: 15px;
+  list-style: none;
+  box-shadow: 0 4px 12px rgba(255,182,193,0.3);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
 
 /* CANDLE GLOW */
 .candle-glow {
@@ -92,15 +98,18 @@ button {
 
 /* SECTIONS */
 .section {
-  opacity: 0;
-  transform: scale(0.8) translateY(20px);
-  margin: 30px 20px;
-  background: rgba(255,255,255,0.15);
+  background: rgba(255, 192, 203, 0.6);
+  backdrop-filter: blur(8px);
   padding: 25px;
   border-radius: 20px;
-  transition: all 0.8s ease-out;
+  box-shadow: 0 6px 20px rgba(255,182,193,0.2);
+  text-align: center;
   position: relative;
   overflow: hidden;
+  opacity: 0;
+  transform: scale(0.8) translateY(20px);
+  transition: all 0.8s ease-out;
+  z-index: 2;
 }
 .section.visible {opacity:1; transform:scale(1) translateY(0);}
 .section::before, .section::after {
@@ -137,9 +146,18 @@ button {
 .shy {opacity:1;}
 .smile {width:20px; height:6px; background:#ff4d6d; border-radius:0 0 10px 10px; position:absolute; bottom:8px; left:20px; opacity:0; transition:0.5s ease;}
 .smile.show {opacity:1;}
+
+/* CARD SPARKLES */
+.card::before, .card::after {
+  content: "✨💖";
+  position: absolute;
+  font-size: 16px;
+  opacity: 0.6;
+}
+.card::before {top:8px; left:10px;}
+.card::after {bottom:8px; right:10px;}
 </style>
 </head>
-
 <body>
 
 <!-- MAIN CARD -->
@@ -159,7 +177,7 @@ button {
 
   <div style="position: relative; height: 70px;">
     <button class="yes" onclick="yesClicked()">YES ❤️</button>
-    <button class="no" id="noBtn" onmouseenter="noHover()">NO 😤</button>
+    <button class="no" id="noBtn">NO 😤</button>
   </div>
 
   <div id="noText"></div>
@@ -203,23 +221,20 @@ let i=0;
 function typeText(){ if(i<text.length){ document.getElementById("typing").innerHTML+=text.charAt(i); i++; setTimeout(typeText,60);}}
 typeText();
 
-/* NO BUTTON */
+/* NO BUTTON IMPOSSIBLE TO CLICK */
 const noBtn=document.getElementById("noBtn");
 const noLines=["Itni sakht bhi mat baniye 🥺","Dil toot raha hai yaar 💔","Ek last chance please 😭","Aap nahi maanti toh main kaise maanunga 😔","YES dabane me kuch nahi jaata 🙈"];
 let idx=0;
-function noHover(){
+noBtn.addEventListener("mouseenter",()=>{ 
   const parent=noBtn.parentElement;
-  const parentRect=parent.getBoundingClientRect();
-  const btnRect=noBtn.getBoundingClientRect();
-  const maxX=parentRect.width-btnRect.width;
-  const maxY=parentRect.height-btnRect.height;
-  const randX=Math.random()*maxX;
-  const randY=Math.random()*maxY;
-  noBtn.style.transition="transform 0.3s ease";
-  noBtn.style.transform=`translate(${randX}px,${randY}px)`;
+  const maxX=parent.clientWidth-noBtn.clientWidth;
+  const maxY=parent.clientHeight-noBtn.clientHeight;
+  const x=Math.random()*maxX;
+  const y=Math.random()*maxY;
+  noBtn.style.transform=`translate(${x}px,${y}px)`;
   document.getElementById("noText").innerText=noLines[idx];
   idx=(idx+1)%noLines.length;
-}
+});
 
 /* YES BUTTON */
 function yesClicked(){
@@ -259,7 +274,7 @@ function confetti(){
     c.style.pointerEvents="none";
     c.style.zIndex=10;
     c.style.transform=`rotate(${Math.random()*360}deg)`;
-    c.style.animation=`confettiFall ${Math.random()*3+2}s forwards`;
+    c.style.animation=`fallSway ${Math.random()*3+2}s forwards`;
     document.body.appendChild(c);
     setTimeout(()=>c.remove(),5000);
   }
@@ -303,8 +318,6 @@ document.addEventListener("mousemove",(e)=>{
   const dy=(e.clientY-centerY)/8;
   pupil.style.transform=`translate(${dx}px,${dy}px)`;
 });
-
-/* RANDOM BLUSH / SHY / SMILE */
 setInterval(()=>{
   blush.classList.toggle("shy");
   smile.classList.toggle("show");
@@ -315,6 +328,5 @@ function floatingEmojisLoop(){
   for(let i=0;i<5;i++){setTimeout(()=>createFloatingEmoji(messages[Math.floor(Math.random()*messages.length)]),i*500);}
 }
 </script>
-
 </body>
 </html>
