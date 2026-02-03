@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-/* 🔴 Body & Animated Gradient Background */
+/* 🔴 Body & Gradient Background with blur */
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
@@ -17,21 +17,18 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   scroll-behavior: smooth;
-
-  /* Gradient background */
-  background: linear-gradient(135deg, #ffb6c1, #ffc0cb, #ff69b4, #ff85b2);
+  background: linear-gradient(135deg, #ffd6e0, #ffc1d6, #ffb6c1);
   background-size: 600% 600%;
-  animation: gradientShift 20s ease infinite;
+  animation: gradientShift 25s ease infinite;
 }
 
-/* Gradient Animation */
 @keyframes gradientShift {
   0% {background-position:0% 50%;}
   50% {background-position:100% 50%;}
   100% {background-position:0% 50%;}
 }
 
-/* Main Card Styling */
+/* Main Card */
 .card {
   background: rgba(255,255,255,0.2);
   padding: 35px;
@@ -42,15 +39,15 @@ body {
   margin: 50px 20px 40px 20px;
   text-align: center;
   animation: pop 1s ease;
+  position: relative;
 }
 
-/* Card Pop Animation */
 @keyframes pop {
   from {transform: scale(0.7); opacity:0}
   to {transform: scale(1); opacity:1}
 }
 
-/* Heart Animation */
+/* Heart animation in main card */
 .heart {
   font-size: 50px;
   animation: beat 1s infinite;
@@ -67,13 +64,13 @@ button {
   margin: 8px;
   font-weight: bold;
   box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-  transition: transform 0.2s;
+  transition: transform 0.3s ease;
 }
 .yes { background: #fff; color: #ff4d6d; }
 .no { background: rgba(255,255,255,0.4); color: #fff; position: relative; }
 
 /* NO button text display */
-#noText { min-height: 28px; margin-top: 10px; }
+#noText { min-height: 28px; margin-top: 10px; font-weight: bold; }
 
 /* YES message */
 #yesMsg { display:none; margin-top:20px; font-size:1.2em; }
@@ -97,69 +94,73 @@ button {
 }
 @keyframes flicker { 0% { opacity: 0.4; } 100% { opacity: 0.85; } }
 
-/* Floating chocolates */
-.choco {
+/* Floating emojis (hearts, chocolates, kisses, sparkles) */
+.femoji {
   position: fixed;
   top: -10px;
-  font-size: 24px;
-  animation: fallChoco linear forwards;
+  font-size: 20px;
+  animation: fallSway linear forwards;
   pointer-events: none;
   z-index: 1;
 }
-@keyframes fallChoco { to { transform: translateY(110vh) rotate(360deg); opacity:0;} }
-
-/* Floating hearts */
-.fheart {
-  position: fixed;
-  top: -10px;
-  font-size: 18px;
-  animation: fallHeart linear forwards;
-  pointer-events: none;
-  z-index: 1;
+@keyframes fallSway {
+  0% { transform: translate(0,0) rotate(0deg);}
+  25% { transform: translate(20px,25vh) rotate(90deg);}
+  50% { transform: translate(-20px,50vh) rotate(180deg);}
+  75% { transform: translate(20px,75vh) rotate(270deg);}
+  100% { transform: translate(0,110vh) rotate(360deg); opacity:0;}
 }
-@keyframes fallHeart { to { transform: translateY(110vh) rotate(360deg); opacity:0;} }
-
-/* Sparkles */
-.sparkle {
-  position: fixed;
-  width: 6px; height: 6px;
-  background: #fff;
-  border-radius: 50%;
-  opacity: 0.8;
-  animation: sparkleAnim linear forwards;
-  z-index: 0;
-}
-@keyframes sparkleAnim { to { transform: translateY(110vh) rotate(180deg); opacity:0;} }
 
 /* Sections */
 .section {
   opacity: 0;
-  transform: translateY(20px);
-  animation: fadeIn 1s forwards;
-  animation-delay: var(--delay, 0s);
+  transform: scale(0.8) translateY(20px);
   margin: 30px 20px;
-  background: rgba(255,255,255,0.1);
-  padding: 20px;
+  background: rgba(255,255,255,0.15);
+  padding: 25px;
   border-radius: 20px;
+  transition: all 0.8s ease-out;
+  position: relative;
+  overflow: hidden;
 }
-@keyframes fadeIn {
-  to {opacity:1; transform: translateY(0);}
+.section.visible {
+  opacity: 1;
+  transform: scale(1) translateY(0);
 }
+
+/* Cute decorations inside sections */
+.section::before, .section::after {
+  content: "💖✨🌸";
+  position: absolute;
+  font-size: 18px;
+  opacity: 0.4;
+}
+.section::before { top: 5px; left: 10px; }
+.section::after { bottom: 5px; right: 10px; }
+
+/* Smooth bounce animation for NO button */
+@keyframes bounce {
+  0%,100% {transform: translate(0,0);}
+  25% {transform: translate(10px,-10px);}
+  50% {transform: translate(-10px,10px);}
+  75% {transform: translate(10px,10px);}
+}
+
 </style>
 </head>
 
 <body>
 
-<!-- Main card -->
+<!-- Main Card -->
 <div class="card">
   <div class="heart">❤️</div>
   <h2 id="typing"></h2>
 
   <p>Kya aap mujhe maaf karengi? 🥺</p>
 
-  <div>
+  <div style="position: relative; height: 70px;">
     <button class="yes" onclick="yesClicked()">YES ❤️</button>
-    <button class="no" onmousemove="noHover(this,event)">NO 😤</button>
+    <button class="no" id="noBtn" onmouseenter="noHover()">NO 😤</button>
   </div>
 
   <div id="noText"></div>
@@ -191,22 +192,22 @@ button {
 <div class="candle-glow"></div>
 
 <!-- Sections -->
-<div class="card section" style="--delay:0.5s">
+<div class="card section">
   <h3>Kitni Khaas Aap Hai</h3>
   <p>Aap meri zindagi ka sabse important hissa hain. Har din aapke bina adhoora lagta hai. 💖</p>
 </div>
 
-<div class="card section" style="--delay:1s">
+<div class="card section">
   <h3>Gussa Na Rahiye</h3>
   <p>Mujhse gussa na rahiye… main hamesha aapki khushi aur smile ke liye jeeta hoon. 🥺❤️</p>
 </div>
 
-<div class="card section" style="--delay:1.5s">
+<div class="card section">
   <h3>Aapki Khubsurti</h3>
   <p>Aapki muskaan aur aankhon ki chamak sabse khoobsurat hai. Aap sach me ek angel jaise hain. ✨</p>
 </div>
 
-<div class="card section" style="--delay:2s">
+<div class="card section">
   <h3>Maafi</h3>
   <p>Mujhse jo galti hui, uske liye dil se maafi chahta hoon. Aap meri zindagi ka sabse important hissa hain. 😔❤️</p>
 </div>
@@ -224,7 +225,8 @@ function typeText(){
 }
 typeText();
 
-/* NO button messages */
+/* NO button logic: bounce inside parent smoothly */
+const noBtn = document.getElementById("noBtn");
 const noLines = [
  "Itni sakht bhi mat baniye 🥺",
  "Dil toot raha hai yaar 💔",
@@ -234,116 +236,99 @@ const noLines = [
 ];
 let idx = 0;
 
-function noHover(btn, e){
-  const x = e.clientX;
-  const y = e.clientY;
-  const newX = Math.random() * window.innerWidth;
-  const newY = Math.random() * window.innerHeight;
-  btn.style.transform = `translate(${newX - x}px, ${newY - y}px) rotate(${Math.random()*360}deg) scale(${Math.random()+0.8})`;
+function noHover(){
+  const parent = noBtn.parentElement;
+  const parentRect = parent.getBoundingClientRect();
+  const btnRect = noBtn.getBoundingClientRect();
+  const maxX = parentRect.width - btnRect.width;
+  const maxY = parentRect.height - btnRect.height;
+  const randX = Math.random() * maxX;
+  const randY = Math.random() * maxY;
+
+  // Animate smoothly using CSS transition
+  noBtn.style.transition = "transform 0.3s ease";
+  noBtn.style.transform = `translate(${randX}px, ${randY}px)`;
+  
+  // Show playful NO text
   document.getElementById("noText").innerText = noLines[idx];
-  idx = (idx+1)%noLines.length;
+  idx = (idx+1) % noLines.length;
 }
 
 /* YES click */
 function yesClicked(){
   document.getElementById("yesMsg").style.display="block";
-  
   const audio = document.getElementById("song");
   audio.currentTime = 30;
   audio.play();
   
   hearts();
   confetti();
-  loveNotesLoop();
+  floatingEmojisLoop();
 }
 
-/* ❤️ Hearts */
-function hearts(){
-  for(let i=0;i<30;i++){
-    let h=document.createElement("div");
-    h.className="fheart";
-    h.innerHTML="❤️";
-    h.style.left=Math.random()*100+"%";
-    h.style.animationDuration=(Math.random()*3+2)+"s";
-    document.body.appendChild(h);
-    setTimeout(()=>h.remove(),5000);
-  }
+/* Floating emojis helper */
+function createFloatingEmoji(emoji){
+  let e = document.createElement("div");
+  e.className="femoji";
+  e.innerText = emoji;
+  e.style.left=Math.random()*100+"%";
+  e.style.fontSize=(Math.random()*20+16)+"px";
+  e.style.animationDuration=(Math.random()*3+4)+"s";
+  document.body.appendChild(e);
+  setTimeout(()=>e.remove(),7000);
 }
 
-/* 🍫 Chocolates falling */
-setInterval(()=>{
-  let c=document.createElement("div");
-  c.className="choco";
-  c.innerHTML="🍫";
-  c.style.left=Math.random()*100+"vw";
-  c.style.animationDuration=(Math.random()*3+4)+"s";
-  document.body.appendChild(c);
-  setTimeout(()=>c.remove(),7000);
-},600);
+/* Hearts, chocolates, kisses, sparkles */
+function hearts(){ for(let i=0;i<30;i++) createFloatingEmoji("❤️"); }
+setInterval(()=>createFloatingEmoji("🍫"),500);
+setInterval(()=>createFloatingEmoji("💋"),700);
+setInterval(()=>createFloatingEmoji("✨"),400);
 
-/* ✨ Sparkles */
-setInterval(()=>{
-  let s=document.createElement("div");
-  s.className="sparkle";
-  s.style.left=Math.random()*100+"vw";
-  s.style.animationDuration=(Math.random()*4+3)+"s";
-  document.body.appendChild(s);
-  setTimeout(()=>s.remove(),7000);
-},400);
-
-/* 🎉 Confetti */
+/* Confetti */
 function confetti() {
   const colors = ["#ff4d6d","#ffcc66","#66ffcc","#66ccff","#ff66cc"];
   for(let i=0;i<50;i++){
     const c = document.createElement("div");
-    c.style.position = "fixed";
-    c.style.width = c.style.height = Math.random()*8+4+"px";
-    c.style.background = colors[Math.floor(Math.random()*colors.length)];
-    c.style.left = Math.random()*100+"vw";
-    c.style.top = "-10px";
-    c.style.borderRadius = "50%";
-    c.style.opacity = 0.9;
-    c.style.pointerEvents = "none";
-    c.style.zIndex = 10;
-    c.style.transform = `rotate(${Math.random()*360}deg)`;
-    c.style.animation = `confettiFall ${Math.random()*3+2}s forwards`;
+    c.style.position="fixed";
+    c.style.width=c.style.height=Math.random()*8+4+"px";
+    c.style.background=colors[Math.floor(Math.random()*colors.length)];
+    c.style.left=Math.random()*100+"vw";
+    c.style.top="-10px";
+    c.style.borderRadius="50%";
+    c.style.opacity=0.9;
+    c.style.pointerEvents="none";
+    c.style.zIndex=10;
+    c.style.transform=`rotate(${Math.random()*360}deg)`;
+    c.style.animation=`confettiFall ${Math.random()*3+2}s forwards`;
     document.body.appendChild(c);
     setTimeout(()=>c.remove(),5000);
   }
 }
-
-/* Confetti animation */
 const style = document.createElement('style');
 style.innerHTML = `@keyframes confettiFall { to { transform: translateY(110vh) rotate(720deg); opacity:0; } }`;
 document.head.appendChild(style);
 
-/* 💌 Floating Love Notes */
-function loveNotesLoop() {
+/* Scroll-triggered section fade + zoom */
+function revealSections(){
+  const sections = document.querySelectorAll(".section");
+  const windowBottom = window.innerHeight + window.scrollY;
+  sections.forEach(sec=>{
+    const secTop = sec.offsetTop + sec.offsetHeight/4;
+    if(windowBottom > secTop){
+      sec.classList.add("visible");
+    }
+  });
+}
+window.addEventListener("scroll", revealSections);
+window.addEventListener("load", revealSections);
+
+/* Floating love notes on YES click */
+function floatingEmojisLoop() {
   const messages = ["I ❤️ you","Forever yours","Mujhse kabhi na door jao","You are my world"];
   for(let i=0;i<5;i++){
-    setTimeout(()=>loveNote(messages[Math.floor(Math.random()*messages.length)]), i*500);
+    setTimeout(()=>createFloatingEmoji(messages[Math.floor(Math.random()*messages.length)]), i*500);
   }
 }
-function loveNote(msg){
-  const div = document.createElement("div");
-  div.innerText = msg;
-  div.style.position="fixed";
-  div.style.top="0px";
-  div.style.left=Math.random()*90+"vw";
-  div.style.fontSize="20px";
-  div.style.color="white";
-  div.style.fontWeight="bold";
-  div.style.opacity="0.9";
-  div.style.pointerEvents="none";
-  div.style.zIndex="10";
-  div.style.animation=`floatText ${Math.random()*4+3}s linear forwards`;
-  document.body.appendChild(div);
-  setTimeout(()=>div.remove(),5000);
-}
-const style2 = document.createElement('style');
-style2.innerHTML = `@keyframes floatText { to { transform: translateY(110vh); opacity:0; } }`;
-document.head.appendChild(style2);
-
 </script>
 
 </body>
