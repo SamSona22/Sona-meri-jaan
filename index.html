@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,13 +9,9 @@
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(135deg,#ff5f8f,#ff9a9e);
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  text-align: center;
+  background: radial-gradient(circle at center, #3b1d2a, #0b0508);
+  color: #fff;
+  overflow-x: hidden;
 }
 .card {
   background: rgba(0,0,0,0.25);
@@ -69,6 +66,24 @@ button {
   margin-top:20px;
   font-size:1.2em;
 }
+.candle-glow {
+  position: fixed;
+  bottom: -40%;
+  left: 50%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(255,180,90,0.35), transparent 70%);
+  transform: translateX(-50%);
+  animation: flicker 4s infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes flicker {
+  0% { opacity: 0.4; }
+  100% { opacity: 0.8; }
+}
+
+
 </style>
 </head>
 
@@ -159,6 +174,7 @@ function confetti(){
   to {transform: translateY(110vh); opacity:0}
 }
 </style>
+<div class="candle-glow"></div>
 
 </body>
 </html>
